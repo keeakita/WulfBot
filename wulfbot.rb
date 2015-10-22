@@ -34,6 +34,8 @@ Telegram::Bot::Client.run(token) do |bot|
           response = "GREEN is not a creative color"
         elsif currency == 'MAYONAISE'
           response = "No Patrick, MAYONAISE is not a currency"
+        elsif currency == 'BTC' || currency == 'BITCOIN'
+          response = "1 BTC is worth 1 BTC, asshole"
 
         # Make sure the hash contains the currency before trying to access it
         elsif !btc['bpi'].has_key?(currency)
