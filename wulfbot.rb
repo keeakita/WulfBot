@@ -4,6 +4,7 @@ require 'telegram/bot'
 require 'open-uri'
 
 require_relative './lib/btc.rb'
+require_relative './lib/emojize.rb'
 
 SRC_URL = 'https://github.com/oslerw/wulfbot'
 
@@ -42,7 +43,9 @@ Telegram::Bot::Client.run(token) do |bot|
 
       bot.api.send_message(chat_id: message.chat.id, text: response)
     when '/sauce'
-        bot.api.send_message(chat_id: message.chat.id, text: SRC_URL)
+      bot.api.send_message(chat_id: message.chat.id, text: SRC_URL)
+    when /\A\/emojize\s+(.+)/
+      bot.api.send_message(chat_id: message.chat.id, text: Emojize.emojize($1))
     end
   end
 end
