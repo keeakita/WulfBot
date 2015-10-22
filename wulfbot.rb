@@ -37,13 +37,7 @@ Telegram::Bot::Client.run(token) do |bot|
         response = "1 BTC is worth 1 BTC, asshole"
       else
         # Actually fetch
-        rate = BitcoinRate.convert(currency)
-
-        if (rate)
-          response = "1 BTC is worth " + rate.to_s + " " + currency
-        else
-          response = "Sorry, " + currency + " is not a supported currency"
-        end
+        response = BitcoinRate.response_string(currency)
       end
 
       bot.api.send_message(chat_id: message.chat.id, text: response)

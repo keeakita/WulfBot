@@ -1,5 +1,6 @@
 require 'telegram/bot' # Message object
 require 'open-uri'
+require 'active_support/inflector'
 
 class BitcoinRate
   API_URL = "https://bitpay.com/api/rates"
@@ -25,14 +26,22 @@ class BitcoinRate
 
     if !@@btc.nil?
       match = @@btc.find do |cur_json|
-        cur_json['code'].upcase == currency.upcase
+        cur_json['code'].upcase == currency.upcase ||
+          cur_json['name'].upcase == currency.upcase
       end
 
       if !match.nil?
-        return match['rate']
+        return match
       end
     end
 
     return false
+  end
+
+  def self.response_string(currency)
+    if (match = self.convert(currency))
+      return "1 Bitcoin is worth #{match['rate']} #{match['name'].pluralize}."
+    end
+    return "Sorry, #{currency} is not a supported currency."
   end
 end
