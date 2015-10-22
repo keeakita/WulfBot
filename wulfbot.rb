@@ -29,8 +29,14 @@ Telegram::Bot::Client.run(token) do |bot|
 
         currency.upcase!
 
+        # Easter Eggs
+        if currency == 'GREEN'
+          response = "GREEN is not a creative color"
+        elsif currency == 'MAYONAISE'
+          response = "No Patrick, MAYONAISE is not a currency"
+
         # Make sure the hash contains the currency before trying to access it
-        if !btc['bpi'].has_key?(currency)
+        elsif !btc['bpi'].has_key?(currency)
           response = "Sorry, " + currency + " is not a supported currency"
         else
           response = "1 BTC is worth " + btc['bpi'][currency]['rate'] + " " + currency
