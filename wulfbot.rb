@@ -3,6 +3,8 @@
 require 'telegram/bot'
 require 'open-uri'
 
+SRC_URL = 'https://github.com/oslerw/wulfbot'
+
 token = JSON.parse(File.read('./secrets.json'))['token']
 
 Telegram::Bot::Client.run(token) do |bot|
@@ -39,6 +41,8 @@ Telegram::Bot::Client.run(token) do |bot|
       rescue
         bot.api.send_message(chat_id: message.chat.id, text: "Error making the request, sorry!")
       end
+    when '/sauce'
+        bot.api.send_message(chat_id: message.chat.id, text: SRC_URL)
     end
   end
 end
