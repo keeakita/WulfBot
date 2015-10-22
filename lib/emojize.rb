@@ -34,11 +34,6 @@ class Emojize
     'Y' => '💴'
   }
 
-  # Find the longest key in the map
-  @@longest = (@@char_map.max_by do |key, val|
-    key.length
-  end)[0].length
-
   def self.emojize(string)
     emoj_str = string.upcase
 
