@@ -18,11 +18,11 @@ Telegram::Bot::Client.run(token) do |bot|
 
     # Check for a command
     case message.text
-    when /\A\/btc/
+    when /\A\/btc(@WulfBot)?/
       # Bitcoin command
       # Check if arg. If not, set to USD
-      if (message.text =~ /\A\/btc\s+(.+)/)
-        currency = $1
+      if (message.text =~ /\A\/btc(@WulfBot)?\s+(.+)/)
+        currency = $2
       else
         currency = 'USD'
       end
@@ -44,8 +44,8 @@ Telegram::Bot::Client.run(token) do |bot|
       bot.api.send_message(chat_id: message.chat.id, text: response)
     when '/sauce'
       bot.api.send_message(chat_id: message.chat.id, text: SRC_URL)
-    when /\A\/emojize\s+(.+)/
-      bot.api.send_message(chat_id: message.chat.id, text: Emojize.emojize($1))
+    when /\A\/emojize(@WulfBot)?\s+(.+)/
+      bot.api.send_message(chat_id: message.chat.id, text: Emojize.emojize($2))
     end
   end
 end
