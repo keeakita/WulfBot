@@ -6,7 +6,14 @@ require 'open-uri'
 require_relative './lib/btc.rb'
 require_relative './lib/emojize.rb'
 
-SRC_URL = 'https://github.com/oslerw/wulfbot'
+SRC_URL    = 'https://github.com/oslerw/wulfbot'
+CHAR_LIMIT = 4096 # Max num characters in message
+
+# Sends a message to Telegram, truncated to the max character limit
+# TODO: Extract this into a helper class
+def send_limited(bot, id, text)
+  bot.api.send_message(chat_id: id, text: text[0,CHAR_LIMIT-1])
+end
 
 token = JSON.parse(File.read('./secrets.json'))['token']
 
@@ -41,11 +48,11 @@ Telegram::Bot::Client.run(token) do |bot|
         response = BitcoinRate.response_string(currency)
       end
 
-      bot.api.send_message(chat_id: message.chat.id, text: response)
+      send_limited(bot, message.chat.id, response)
     when '/sauce'
-      bot.api.send_message(chat_id: message.chat.id, text: SRC_URL)
+      send_limited(bot, message.chat.id, SRC_URL)
     when /\A\/emojize(@WulfBot)?\s+(.+)/
-      bot.api.send_message(chat_id: message.chat.id, text: Emojize.emojize($2))
+      send_limited(bot, message.chat.id, Emojize.emojize($2))
     end
   end
 end
