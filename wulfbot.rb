@@ -2,6 +2,7 @@
 
 require 'telegram/bot'
 require 'open-uri'
+require 'bigdecimal'
 
 require_relative './lib/btc.rb'
 require_relative './lib/emojize.rb'
@@ -53,6 +54,10 @@ def handle_message(bot, message)
     send_limited(bot, message.chat.id, SRC_URL)
   when /\A\/emojize(@WulfBot)?\s+(.+)/
     send_limited(bot, message.chat.id, Emojize.emojize($2))
+  when /\A\/dogyears(@WulfBot)?\s+([\d.-]+)/
+    dog_years = BigDecimal($2) * BigDecimal('7')
+    send_limited(bot, message.chat.id,
+                 "#{$2.to_f} human years is #{dog_years.to_s('F')} dog years.")
   end
 end
 
