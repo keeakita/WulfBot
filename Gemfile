@@ -7,3 +7,6 @@ gem 'telegram-bot-ruby',
   :branch => 'master'
 
 gem 'activesupport'
+gem 'standalone_migrations'
+gem 'activerecord'
+gem 'sqlite3'

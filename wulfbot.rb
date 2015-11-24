@@ -6,6 +6,7 @@ require 'bigdecimal'
 
 require_relative './lib/btc.rb'
 require_relative './lib/emojize.rb'
+require_relative './lib/points.rb'
 
 SRC_URL    = 'https://github.com/oslerw/wulfbot'
 CHAR_LIMIT = 4096 # Max num characters in message
@@ -58,7 +59,63 @@ def handle_message(bot, message)
     dog_years = BigDecimal($2) * BigDecimal('7')
     send_limited(bot, message.chat.id,
                  "#{$2.to_f} human years is #{dog_years.to_s('F')} dog years.")
+
+  when /\A\/addpoint(@WulfBot)?\s+(.+)/
+    user = $2
+    record = Points::getPointRecord(message.chat.id, user)
+
+    # Check for no existing record
+    if (record.nil?)
+      record = Points::PointRecord.create(group: message.chat.id, user: user)
+    end
+
+    record.addpoint!
+    send_limited(bot, message.chat.id, record.to_s)
+
+  when /\A\/rmpoint(@WulfBot)?\s+(.+)/
+    user = $2
+    record = Points::getPointRecord(message.chat.id, user)
+
+    # Check for no existing record
+    if (record.nil?)
+      record = Points::PointRecord.create(group: message.chat.id, user: user)
+    end
+
+    record.rmpoint!
+    send_limited(bot, message.chat.id, record.to_s)
+
+  when /\A\/points(@WulfBot)?\s+(.+)/
+    user = $2
+    record = Points::getPointRecord(message.chat.id, user)
+
+    # Check for no existing record
+    unless (record.nil?)
+      send_limited(bot, message.chat.id, record.to_s)
+    else
+      send_limited(bot, message.chat.id, "#{user} has no points.")
+    end
+
+  when /\A\/top(@WulfBot)?/
+    records = Points::topScores(message.chat.id)
+
+    resp = "Top 5 scores for this chat:\n"
+    records.each do |record|
+      resp += record.to_s + "\n"
+    end
+
+    send_limited(bot, message.chat.id, resp)
+
+  when /\A\/bottom(@WulfBot)?/
+    records = Points::bottomScores(message.chat.id)
+
+    resp = "Bottom 5 scores for this chat:\n"
+    records.each do |record|
+      resp += record.to_s + "\n"
+    end
+
+    send_limited(bot, message.chat.id, resp)
   end
+
 end
 
 # Main method
