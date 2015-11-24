@@ -2,7 +2,7 @@ require 'active_record'
 
 module Points
 
-  db_name =  ENV['DATABASE'] || 'development'
+  db_name =  ENV['RAILS_ENV'] || 'development'
   ActiveRecord::Base.establish_connection(
     YAML::load(
       File.open('db/config.yml')
