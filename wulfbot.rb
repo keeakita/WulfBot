@@ -128,7 +128,8 @@ def main
 rescue Telegram::Bot::Exceptions::ResponseError => e
   # If telegram gave a 502, it's safe to restart
   if (e.error_code.to_s == "502")
-    puts "Got error 502 from Telegram, restarting"
+    puts "Got error 502 from Telegram, restarting in 10 seconds"
+    sleep 10
     main
   else
     puts e
