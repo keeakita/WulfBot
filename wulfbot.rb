@@ -27,10 +27,10 @@ def handle_message(bot, message)
 
   # Check for a command
   case message.text
-  when /\A\/btc(@WulfBot)?/
+  when /\A\/btc(@WulfBot)?/i
     # Bitcoin command
     # Check if arg. If not, set to USD
-    if (message.text =~ /\A\/btc(@WulfBot)?\s+(.+)/)
+    if (message.text =~ /\A\/btc(@WulfBot)?\s+(.+)/i)
       currency = $2
     else
       currency = 'USD'
@@ -51,16 +51,16 @@ def handle_message(bot, message)
     end
 
     send_limited(bot, message.chat.id, response)
-  when '/sauce'
+  when /\A\/sauce(@WulfBot)?/i
     send_limited(bot, message.chat.id, SRC_URL)
-  when /\A\/emojize(@WulfBot)?\s+(.+)/
+  when /\A\/emojize(@WulfBot)?\s+(.+)/i
     send_limited(bot, message.chat.id, Emojize.emojize($2))
-  when /\A\/dogyears(@WulfBot)?\s+([\d.-]+)/
+  when /\A\/dogyears(@WulfBot)?\s+([\d.-]+)/i
     dog_years = BigDecimal($2) * BigDecimal('7')
     send_limited(bot, message.chat.id,
                  "#{$2.to_f} human years is #{dog_years.to_s('F')} dog years.")
 
-  when /\A\/addpoint(@WulfBot)?\s+(.+)/
+  when /\A\/addpoint(@WulfBot)?\s+(.+)/i
     user = $2
     record = Points::getPointRecord(message.chat.id, user)
 
@@ -72,7 +72,7 @@ def handle_message(bot, message)
     record.addpoint!
     send_limited(bot, message.chat.id, record.to_s)
 
-  when /\A\/rmpoint(@WulfBot)?\s+(.+)/
+  when /\A\/rmpoint(@WulfBot)?\s+(.+)/i
     user = $2
     record = Points::getPointRecord(message.chat.id, user)
 
@@ -84,7 +84,7 @@ def handle_message(bot, message)
     record.rmpoint!
     send_limited(bot, message.chat.id, record.to_s)
 
-  when /\A\/points(@WulfBot)?\s+(.+)/
+  when /\A\/points(@WulfBot)?\s+(.+)/i
     user = $2
     record = Points::getPointRecord(message.chat.id, user)
 
@@ -95,7 +95,7 @@ def handle_message(bot, message)
       send_limited(bot, message.chat.id, "#{user} has no points.")
     end
 
-  when /\A\/top(@WulfBot)?/
+  when /\A\/top(@WulfBot)?/i
     records = Points::topScores(message.chat.id)
 
     resp = "Top 5 scores for this chat:\n"
@@ -105,7 +105,7 @@ def handle_message(bot, message)
 
     send_limited(bot, message.chat.id, resp)
 
-  when /\A\/bottom(@WulfBot)?/
+  when /\A\/bottom(@WulfBot)?/i
     records = Points::bottomScores(message.chat.id)
 
     resp = "Bottom 5 scores for this chat:\n"
