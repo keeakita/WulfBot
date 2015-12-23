@@ -38,7 +38,7 @@ module Points
   end
 
   def self.getPointRecord(group, user)
-    PointRecord.where(group: group, user:user).take
+    PointRecord.where(group: group, user: user.downcase).take
   end
 
   def self.topScores(group, number=5)

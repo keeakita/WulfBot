@@ -62,11 +62,13 @@ def handle_message(bot, message)
 
   when /\A\/addpoint(@WulfBot)?\s+(.+)/i
     user = $2
-    record = Points::getPointRecord(message.chat.id, user)
+    record = Points::getPointRecord(message.chat.id, user.downcase)
 
     # Check for no existing record
     if (record.nil?)
-      record = Points::PointRecord.create(group: message.chat.id, user: user)
+      record = Points::PointRecord.create(
+        group: message.chat.id,
+        user: user.downcase)
     end
 
     record.addpoint!
@@ -74,11 +76,13 @@ def handle_message(bot, message)
 
   when /\A\/rmpoint(@WulfBot)?\s+(.+)/i
     user = $2
-    record = Points::getPointRecord(message.chat.id, user)
+    record = Points::getPointRecord(message.chat.id, user.downcase)
 
     # Check for no existing record
     if (record.nil?)
-      record = Points::PointRecord.create(group: message.chat.id, user: user)
+      record = Points::PointRecord.create(
+        group: message.chat.id,
+        user: user.downcase)
     end
 
     record.rmpoint!
@@ -86,7 +90,7 @@ def handle_message(bot, message)
 
   when /\A\/points(@WulfBot)?\s+(.+)/i
     user = $2
-    record = Points::getPointRecord(message.chat.id, user)
+    record = Points::getPointRecord(message.chat.id, user.downcase)
 
     # Check for no existing record
     unless (record.nil?)
