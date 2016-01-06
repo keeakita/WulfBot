@@ -51,14 +51,24 @@ def handle_message(bot, message)
     end
 
     send_limited(bot, message.chat.id, response)
+
   when /\A\/sauce(@WulfBot)?/i
     send_limited(bot, message.chat.id, SRC_URL)
+
   when /\A\/emojize(@WulfBot)?\s+(.+)/i
     send_limited(bot, message.chat.id, Emojize.emojize($2))
-  when /\A\/dogyears(@WulfBot)?\s+([\d.-]+)/i
-    dog_years = BigDecimal($2) * BigDecimal('7')
+
+  when /\A\/dogyears(@WulfBot)?\s+([eE\d.-]+)/i
+    human_years = BigDecimal($2)
+    dog_years = human_years * BigDecimal('7')
+
+    # Make short, readable strings for the human and dog years
+    human_str, dog_str = [human_years, dog_years].map do |bigDec|
+      bigDec > 1e9 || bigDec < 1e-9 ? bigDec.to_s('E') : bigDec.to_s('F')
+    end
+
     send_limited(bot, message.chat.id,
-                 "#{$2.to_f} human years is #{dog_years.to_s('F')} dog years.")
+                 "#{human_str} human years is #{dog_str} dog years.")
 
   when /\A\/addpoint(@WulfBot)?\s+(.+)/i
     user = $2
