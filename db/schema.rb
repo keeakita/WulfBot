@@ -11,13 +11,13 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151223163509) do
+ActiveRecord::Schema.define(version: 20160127010408) do
 
   create_table "point_records", force: :cascade do |t|
     t.string  "user"
-    t.integer "group"
-    t.integer "upvotes",   default: 0
-    t.integer "downvotes", default: 0
+    t.integer "group",     limit: 8
+    t.integer "upvotes",             default: 0
+    t.integer "downvotes",           default: 0
   end
 
 end
