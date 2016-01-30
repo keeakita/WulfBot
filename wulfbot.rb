@@ -70,33 +70,38 @@ def handle_message(bot, message)
     send_limited(bot, message.chat.id,
                  "#{human_str} human years is #{dog_str} dog years.")
 
-  when /\A\/addpoint(@WulfBot)?\s+(.+)/i
-    user = $2
-    record = Points::getPointRecord(message.chat.id, user.downcase)
+  # /addpoint and /rmpoint
+  when /\A\/(add|rm)point(@WulfBot)?\s+(.+)/i
+    mode = $1
+    target = $3
 
-    # Check for no existing record
-    if (record.nil?)
-      record = Points::PointRecord.create(
-        group: message.chat.id,
-        user: user.downcase)
+    # Check if the sender can vote
+    if !(Points.canVote?(message.chat.id, message.from.id, target,
+                        upvote: mode == 'add'))
+
+      send_limited(bot, message.chat.id,
+                   "Sorry, you need to wait before voting on that again.")
+    else
+      # Check for no existing record
+      record = Points::getPointRecord(message.chat.id, target.downcase)
+      if (record.nil?)
+        record = Points::PointRecord.create(
+          group: message.chat.id,
+          user: target.downcase)
+      end
+
+      if (mode == "add")
+        record.addpoint!
+      else
+        record.rmpoint!
+      end
+
+      # Register this vote attempt to the rate limit checker
+      Points.registerVoteTime(message.chat.id, message.from.id, target,
+                              upvote: mode == 'add')
+
+      send_limited(bot, message.chat.id, record.to_s)
     end
-
-    record.addpoint!
-    send_limited(bot, message.chat.id, record.to_s)
-
-  when /\A\/rmpoint(@WulfBot)?\s+(.+)/i
-    user = $2
-    record = Points::getPointRecord(message.chat.id, user.downcase)
-
-    # Check for no existing record
-    if (record.nil?)
-      record = Points::PointRecord.create(
-        group: message.chat.id,
-        user: user.downcase)
-    end
-
-    record.rmpoint!
-    send_limited(bot, message.chat.id, record.to_s)
 
   when /\A\/points(@WulfBot)?\s+(.+)/i
     user = $2
