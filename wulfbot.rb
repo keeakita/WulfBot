@@ -14,6 +14,9 @@ CHAR_LIMIT = 4096 # Max num characters in message
 # Parse the secrets JSON and get the bot's telegram token
 TOKEN = JSON.parse(File.read('./secrets.json'))['token']
 
+# For the uptime command
+START_TIME = Time.now
+
 # Sends a message to Telegram, truncated to the max character limit
 # TODO: Extract this into a helper class
 def send_limited(bot, id, text)
@@ -131,6 +134,33 @@ def handle_message(bot, message)
     records.each do |record|
       resp += record.to_s + "\n"
     end
+
+    send_limited(bot, message.chat.id, resp)
+
+  when /\A\/uptime(@WulfBot)?/i
+    diff = Time.now - START_TIME
+
+    years, days, hours, minutes, seconds = 0
+
+    years = (diff / (60 * 60 * 24 * 365)).to_i
+    diff -= years * (60 * 60 * 24 * 365)
+
+    days = (diff / (60 * 60 * 24)).to_i
+    diff -= days * (60 * 60 * 24)
+
+    hours = (diff / (60 * 60)).to_i
+    diff -= hours * (60 * 60)
+
+    minutes = (diff / 60).to_i
+    diff -= minutes * 60
+
+    resp = "Bot has been up for "
+    resp += "#{years} years, " if years > 0
+    resp += "#{days} days, " if days > 0
+    resp += "#{hours} hours, " if hours > 0
+    resp += "#{minutes} minutes, " if minutes > 0
+
+    resp += "and #{diff.to_i} seconds."
 
     send_limited(bot, message.chat.id, resp)
   end
