@@ -160,7 +160,11 @@ def handle_message(bot, message)
     resp += "#{hours} hours, " if hours > 0
     resp += "#{minutes} minutes, " if minutes > 0
 
-    resp += "and #{diff.to_i} seconds."
+    if (years > 0 || days > 0 || hours > 0 || minutes > 0)
+      resp += "and "
+    end
+
+    resp += "#{diff.to_i} seconds."
 
     send_limited(bot, message.chat.id, resp)
   end
