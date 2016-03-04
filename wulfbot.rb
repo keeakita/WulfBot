@@ -7,12 +7,15 @@ require 'bigdecimal'
 require_relative './lib/btc.rb'
 require_relative './lib/emojize.rb'
 require_relative './lib/points.rb'
+require_relative './lib/minecraft.rb'
 
 SRC_URL    = 'https://github.com/oslerw/wulfbot'
 CHAR_LIMIT = 4096 # Max num characters in message
 
 # Parse the secrets JSON and get the bot's telegram token
-TOKEN = JSON.parse(File.read('./secrets.json'))['token']
+secrets =  JSON.parse(File.read('./secrets.json'))
+TOKEN = secrets["token"]
+MC_SERV = secrets["minecraft"]
 
 # For the uptime command
 START_TIME = Time.now
@@ -167,6 +170,12 @@ def handle_message(bot, message)
     resp += "#{diff.to_i} seconds."
 
     send_limited(bot, message.chat.id, resp)
+
+  when /\A\/minecraft(@WulfBot)?/i
+    unless MC_SERV.nil?
+      send_limited(bot, message.chat.id,
+                   MinecraftInfo::get_minecraft_player_count(MC_SERV))
+    end
   end
 
 end
