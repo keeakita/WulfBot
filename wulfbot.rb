@@ -41,8 +41,8 @@ def handle_message(bot, message)
     # Easter Eggs
     if currency == 'GREEN'
       response = "GREEN is not a creative color"
-    elsif currency == 'MAYONAISE'
-      response = "No Patrick, MAYONAISE is not a currency"
+    elsif currency == 'MAYONNAISE'
+      response = "No Patrick, MAYONNAISE is not a currency"
     elsif currency == 'BTC' || currency == 'BITCOIN'
       response = "1 BTC is worth 1 BTC, asshole"
     else
