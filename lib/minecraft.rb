@@ -2,10 +2,12 @@ require 'socket'
 require 'json'
 require 'protobuf'
 
+# TODO: Caching
 module MinecraftInfo
 
+  # Fetches the description JSON from a Minecraft server
   # TODO: Use protobuf for real, don't guess at bytes
-  def self.get_minecraft_player_count(server, port=25565)
+  def self.get_server_json(server, port=25565)
     sock = TCPSocket.new(server, port)
 
     # Array of bytes to send
@@ -39,10 +41,33 @@ module MinecraftInfo
     json_start_pos = response.index("{")
     response = response[json_start_pos..-1]
 
-    resp_json = JSON.parse(response)
-    return "#{resp_json['players']['online']}/#{resp_json['players']['max']}"
+    return JSON.parse(response)
   rescue
-    return "Error"
+    return nil
+  end
+
+  # Gets the number of players on the server
+  def self.get_minecraft_player_count(server, port=25565)
+    resp_json = get_server_json(server, port)
+    return "#{resp_json['players']['online']}/#{resp_json['players']['max']}"
+  end
+
+  # Gets the list of players on the server by username
+  def self.get_minecraft_player_list(server, port=25565)
+    player_list = ""
+    resp_json = get_server_json(server, port)
+
+    resp_json['players']['sample'].each do |player|
+      player_list += player['name'] + "\n";
+    end
+
+    remaining = resp_json['players']['sample'].size - resp_json['players']['online']
+
+    if remaining > 0
+      player_list += "... And #{remaining} others"
+    end
+
+    return player_list
   end
 
 end

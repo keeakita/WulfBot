@@ -173,8 +173,11 @@ def handle_message(bot, message)
 
   when /\A\/minecraft(@WulfBot)?/i
     unless MC_SERV.nil?
-      send_limited(bot, message.chat.id,
-                   MinecraftInfo::get_minecraft_player_count(MC_SERV))
+      resp = "Current players: " +
+        MinecraftInfo::get_minecraft_player_count(MC_SERV) + "\n"
+
+      resp += MinecraftInfo::get_minecraft_player_list(MC_SERV)
+      send_limited(bot, message.chat.id, resp)
     end
   end
 
