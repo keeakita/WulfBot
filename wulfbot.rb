@@ -173,11 +173,24 @@ def handle_message(bot, message)
 
   when /\A\/minecraft(@WulfBot)?/i
     unless MC_SERV.nil?
-      resp = "Current players: " +
-        MinecraftInfo::get_minecraft_player_count(MC_SERV) + "\n"
+      begin
+        resp = "Current players: "
 
-      resp += MinecraftInfo::get_minecraft_player_list(MC_SERV)
-      send_limited(bot, message.chat.id, resp)
+        player_count = MinecraftInfo::get_minecraft_player_count(MC_SERV)
+        max_slots = MinecraftInfo::get_minecraft_number_slots(MC_SERV)
+
+        resp += "#{player_count}/#{max_slots}\n"
+
+        if (player_count > 0)
+          resp += MinecraftInfo::get_minecraft_player_list(MC_SERV)
+        end
+
+        send_limited(bot, message.chat.id, resp)
+      rescue => e
+        puts e
+        puts e.backtrace
+        send_limited(bot, message.chat.id, "Error getting server stats")
+      end
     end
   end
 
