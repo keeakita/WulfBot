@@ -65,6 +65,12 @@ module MinecraftInfo
     return resp_json['players']['max']
   end
 
+  # Gets the text description of the server
+  def self.get_minecraft_description(server, port=25565)
+    resp_json = get_server_json(server, port)
+    return resp_json['description']['text']
+  end
+
   # Gets the list of players on the server by username
   def self.get_minecraft_player_list(server, port=25565)
     player_list = ""
