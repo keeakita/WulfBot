@@ -68,7 +68,13 @@ module MinecraftInfo
   # Gets the text description of the server
   def self.get_minecraft_description(server, port=25565)
     resp_json = get_server_json(server, port)
-    return resp_json['description']['text']
+
+    # Check for an older style response
+    if (resp_json['description'].is_a? String)
+      return resp_json['description']
+    else
+      return resp_json['description']['text']
+    end
   end
 
   # Gets the list of players on the server by username
