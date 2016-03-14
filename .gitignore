@@ -1,4 +1,4 @@
 *.swp
 Gemfile.lock
-secrets.json
+secrets.yaml
 db/*.sqlite3

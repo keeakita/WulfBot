@@ -54,19 +54,19 @@ module MinecraftInfo
   end
 
   # Gets the number of players on the server
-  def self.get_minecraft_player_count(server, port=25565)
+  def self.get_player_count(server, port=25565)
     resp_json = get_server_json(server, port)
     return resp_json['players']['online']
   end
 
   # Gets the total number of open slots on a server
-  def self.get_minecraft_number_slots(server, port=25565)
+  def self.get_number_slots(server, port=25565)
     resp_json = get_server_json(server, port)
     return resp_json['players']['max']
   end
 
   # Gets the text description of the server
-  def self.get_minecraft_description(server, port=25565)
+  def self.get_description(server, port=25565)
     resp_json = get_server_json(server, port)
 
     # Check for an older style response
@@ -78,7 +78,7 @@ module MinecraftInfo
   end
 
   # Gets the list of players on the server by username
-  def self.get_minecraft_player_list(server, port=25565)
+  def self.get_player_list(server, port=25565)
     player_list = ""
     resp_json = get_server_json(server, port)
 

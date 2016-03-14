@@ -1,6 +1,7 @@
 #!/usr/bin/env ruby
 
 require 'telegram/bot'
+require 'yaml'
 require 'open-uri'
 require 'bigdecimal'
 
@@ -12,10 +13,10 @@ require_relative './lib/minecraft.rb'
 SRC_URL    = 'https://github.com/oslerw/wulfbot'
 CHAR_LIMIT = 4096 # Max num characters in message
 
-# Parse the secrets JSON and get the bot's telegram token
-secrets =  JSON.parse(File.read('./secrets.json'))
-TOKEN = secrets["token"]
-MC_SERV = secrets["minecraft"]
+# Parse the secrets YAML and get the bot's telegram token
+secrets = YAML.load_file('./secrets.yaml')
+TOKEN = secrets["general"]["token"]
+MC_INFO = secrets["minecraft"]
 
 # For the uptime command
 START_TIME = Time.now
@@ -172,11 +173,24 @@ def handle_message(bot, message)
     send_limited(bot, message.chat.id, resp)
 
   when /\A\/minecraft(@WulfBot)?/i
-    unless MC_SERV.nil?
+    # Is the command configured?
+    if MC_INFO.nil?
+      send_limited(bot, message.chat.id, "Minecraft plugin not configured")
+
+    # Is this chat allowed to use this command?
+    elsif !MC_INFO["restrict"].include?(message.chat.id)
+      send_limited(bot, message.chat.id,
+                   "This chat does not have permission to use this command.")
+    else
       begin
-        player_count = MinecraftInfo::get_minecraft_player_count(MC_SERV)
-        max_slots = MinecraftInfo::get_minecraft_number_slots(MC_SERV)
-        description = MinecraftInfo::get_minecraft_description(MC_SERV)
+        player_count = MinecraftInfo::get_player_count(MC_INFO["server"],
+                                                       MC_INFO["port"])
+
+        max_slots = MinecraftInfo::get_number_slots(MC_INFO["server"],
+                                                    MC_INFO["port"])
+
+        description = MinecraftInfo::get_description(MC_INFO["server"],
+                                                     MC_INFO["port"])
 
         resp = "\"#{description}\"\n"
         resp += "Current players: #{player_count}/#{max_slots}\n"
