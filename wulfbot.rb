@@ -196,7 +196,8 @@ def handle_message(bot, message)
         resp += "Current players: #{player_count}/#{max_slots}\n"
 
         if (player_count > 0)
-          resp += MinecraftInfo::get_minecraft_player_list(MC_SERV)
+          resp += MinecraftInfo::get_player_list(MC_INFO["server"],
+                                                 MC_INFO["port"])
         end
 
         send_limited(bot, message.chat.id, resp)
