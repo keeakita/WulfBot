@@ -207,6 +207,10 @@ def handle_message(bot, message)
         send_limited(bot, message.chat.id, "Error getting server stats")
       end
     end
+
+  when /\A\/ddate(@WulfBot)?/i
+    response = `ddate '+Today is %A, the %e day of %B in the YOLD %Y. %.%N Have a Chaotic %H!'`
+    send_limited(bot, message.chat.id, response.empty? ? "Error getting date" : response)
   end
 
 end

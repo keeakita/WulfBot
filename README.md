@@ -19,6 +19,8 @@ WulfBot accepts the following commands:
 - `/dogyears [time]`: Converts a time into dog years, using arbitrary precision
   decimal math.
 - `/uptime`: Tells how long the bot has been running.
+- `/ddate`: Gets the current date in the Discordian calendar system. Requires
+  the `ddate` command to be installed.
 
 ### Points
 A point tracker (think upvotes/downvotes):
