@@ -100,8 +100,11 @@ module WulfBot::Plugin::Points
       mode = $1
       target = $3
 
+      if mode.nil? || target.nil?
+        WulfBot::send_limited(message.chat.id,
+                     "Please tell me what you want to vote on.")
       # Check if the sender can vote
-      if !(canVote?(message.chat.id, message.from.id))
+      elsif !(canVote?(message.chat.id, message.from.id))
 
         WulfBot::send_limited(message.chat.id,
                      "Sorry, you need to wait before voting again.")
