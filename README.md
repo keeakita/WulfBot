@@ -37,3 +37,19 @@ Retrieves information about a Minecraft server. Please update `secrets.yaml`
 with the settings of the server.
 - `/minecraft`: Shows the server description, player count, total slots, and
   list of players online.
+
+## Plugins
+
+Want to write your own plugin for WulfBot? It now has a kinda-sort plugin API,
+take a look at files in the `plugin/` directory for examples on how to use it.
+The sort story is:
+
+```ruby
+module MyCoolModule
+  # Register a command handler
+  WulfBot::register_command(command: "docoolthing") do |message|
+    # Do stuff here. This will be run if the user types "/docoolthing".
+    # message is message object, consule the telegram-bot-ruby project for info
+  end
+end
+```
