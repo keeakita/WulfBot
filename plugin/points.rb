@@ -1,7 +1,8 @@
 require 'active_record'
 
-module Points
+module WulfBot::Plugin::Points
 
+  # Connect to the database
   db_name =  ENV['RAILS_ENV'] || 'development'
   ActiveRecord::Base.establish_connection(
     YAML::load(
@@ -103,4 +104,84 @@ module Points
       records.first[:time] = Time.now
     end
   end
+
+
+  # /addpoint and /rmpoint
+  on_add_or_rm_points = Proc.new do |message|
+    /\A\/(add|rm)point(@WulfBot)?\s+(.+)/i =~ message.text
+      mode = $1
+      target = $3
+
+      # Check if the sender can vote
+      if !(canVote?(message.chat.id, message.from.id, target,
+                          upvote: mode == 'add'))
+
+        send_limited(bot, message.chat.id,
+                     "Sorry, you need to wait before voting on that again.")
+      else
+        # Check for no existing record
+        record = getPointRecord(message.chat.id, target.downcase)
+        if (record.nil?)
+          record = PointRecord.create(
+            group: message.chat.id,
+            user: target.downcase)
+        end
+
+        if (mode == "add")
+          record.addpoint!
+        else
+          record.rmpoint!
+        end
+
+        # Register this vote attempt to the rate limit checker
+        registerVoteTime(message.chat.id, message.from.id, target,
+                                upvote: mode == 'add')
+
+        WulfBot::send_limited(message.chat.id, record.to_s)
+      end
+    end
+
+    WulfBot::register_command(command: "addpoint", &on_add_or_rm_points)
+    WulfBot::register_command(command: "rmpoint", &on_add_or_rm_points)
+
+    WulfBot::register_command(command: "points") do |message|
+      /\A\/points(@WulfBot)?\s+(.+)/i =~ message.text
+      user = $2
+
+      if user.nil?
+        WulfBot::send_limited(message.chat.id,
+                              "Please specify which score you want to check")
+      else
+        record = getPointRecord(message.chat.id, user.downcase)
+
+        # Check for no existing record
+        unless (record.nil?)
+          WulfBot::send_limited(message.chat.id, record.to_s)
+        else
+          WulfBot::send_limited(message.chat.id, "#{user} has no points.")
+        end
+      end
+    end
+
+    WulfBot::register_command(command: "top") do |message|
+      records = topScores(message.chat.id)
+
+      resp = "Top 5 scores for this chat:\n"
+      records.each do |record|
+        resp += record.to_s + "\n"
+      end
+
+      WulfBot::send_limited(message.chat.id, resp)
+    end
+
+    WulfBot::register_command(command: "bottom") do |message|
+      records = bottomScores(message.chat.id)
+
+      resp = "Bottom 5 scores for this chat:\n"
+      records.each do |record|
+        resp += record.to_s + "\n"
+      end
+
+      WulfBot::send_limited(message.chat.id, resp)
+    end
 end

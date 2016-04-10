@@ -3,8 +3,12 @@ require 'json'
 require 'protobuf'
 require 'active_support/cache'
 
-module MinecraftInfo
+require_relative '../lib/secrets.rb'
 
+module WulfBot::Plugin::Minecraft
+  MC_INFO = WulfBot::Secrets.secrets["minecraft"]
+
+  # Cache for requests, to avoid flooding a server
   @@json_cache = ActiveSupport::Cache::MemoryStore.new
 
   # Fetches the description JSON from a Minecraft server
@@ -95,4 +99,37 @@ module MinecraftInfo
     return player_list
   end
 
+  # Register a command handler
+  WulfBot::register_command(command: "minecraft") do |message|
+    # Is the server information configured?
+    if MC_INFO.nil?
+      WulfBot::send_limited(message.chat.id, "Minecraft plugin not configured")
+
+    # Is this chat allowed to use this command?
+    elsif !MC_INFO["restrict"].include?(message.chat.id)
+      WulfBot::send_limited(message.chat.id,
+                   "This chat does not have permission to use this command.")
+    else
+      begin
+        player_count = get_player_count(MC_INFO["server"], MC_INFO["port"])
+
+        max_slots = get_number_slots(MC_INFO["server"], MC_INFO["port"])
+
+        description = get_description(MC_INFO["server"], MC_INFO["port"])
+
+        resp = "\"#{description}\"\n"
+        resp += "Current players: #{player_count}/#{max_slots}\n"
+
+        if (player_count > 0)
+          resp += get_player_list(MC_INFO["server"], MC_INFO["port"])
+        end
+
+        WulfBot::send_limited(message.chat.id, resp)
+      rescue => e
+        puts e
+        puts e.backtrace
+        WulfBot::send_limited(message.chat.id, "Error getting server stats")
+      end
+    end
+  end
 end

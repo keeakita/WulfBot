@@ -1,4 +1,4 @@
-class Emojize
+module WulfBot::Plugin::Emojize
 
   # Map of characters. For this to work as expected, longer keys must come
   # before shorter keys in the hash.
@@ -25,6 +25,7 @@ class Emojize
     'OK' => '🆗',
     'ON' => '🔛',
     'WC' => '🚾',
+    'TM' => '™',
     '10' => '🔟',
     '17' => '📅',
     '24' => '🏪',
@@ -79,5 +80,15 @@ class Emojize
     end
 
     return emoj_str
+  end
+
+  # Register a command handler
+  WulfBot::register_command(command: "emojize") do |message|
+    /\A\/emojize(@WulfBot)?\s+(.+)/ =~ message.text
+    if $2.nil?
+      WulfBot::send_limited(message.chat.id, "Give me a string to emojize")
+    else
+      WulfBot::send_limited(message.chat.id, self.emojize($2))
+    end
   end
 end
