@@ -83,8 +83,7 @@ def handle_message(bot, message)
     target = $3
 
     # Check if the sender can vote
-    if !(Points.canVote?(message.chat.id, message.from.id, target,
-                        upvote: mode == 'add'))
+    if !(Points.canVote?(message.chat.id, message.from.id))
 
       send_limited(bot, message.chat.id,
                    "Sorry, you need to wait before voting on that again.")
@@ -104,8 +103,7 @@ def handle_message(bot, message)
       end
 
       # Register this vote attempt to the rate limit checker
-      Points.registerVoteTime(message.chat.id, message.from.id, target,
-                              upvote: mode == 'add')
+      Points.registerVoteTime(message.chat.id, message.from.id)
 
       send_limited(bot, message.chat.id, record.to_s)
     end
