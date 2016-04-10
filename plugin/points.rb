@@ -14,7 +14,7 @@ module WulfBot::Plugin::Points
   @@last_voted = []
 
   # Time to wait (in seconds) before letting a user vote again
-  VOTE_COOLDOWN = 900
+  VOTE_COOLDOWN = 7200
 
   # An ActiveRecord class representing the score for a given user
   class PointRecord < ActiveRecord::Base
