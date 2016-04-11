@@ -8,6 +8,36 @@ WulfBot is a Telegram bot written in Ruby that interfaces with the Telegram Bot
 API. It does a bunch of arbitrary, unrelated things that I felt like
 implementing.
 
+## Installation
+
+1. Install the proper version of ruby, according to the contents of
+   `.ruby-version` (using rbenv or rvm is recommended)
+2. `gem install bundler`
+3. `bundle install`
+4. `rake db:schema:load`
+5. Copy `secrets.yaml.sample` to `secrets.yaml` and edit it, setting the token
+   to the token given to you by BotFather.
+
+To set up using a production database instead of a development one, edit
+`db/config.yml` accordingly, then:
+
+```bash
+export DATABASE=production
+rake db:schema:load
+```
+
+## Running
+
+```bash
+bundle exec ruby wulfbot.rb
+```
+
+To run with a production database:
+```bash
+export DATABASE=production
+bundle exec ruby wulfbot.rb
+```
+
 ## Commands
 
 WulfBot accepts the following commands:
