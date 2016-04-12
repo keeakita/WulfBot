@@ -70,16 +70,20 @@ with the settings of the server.
 
 ## Plugins
 
-Want to write your own plugin for WulfBot? It now has a kinda-sort plugin API,
-take a look at files in the `plugin/` directory for examples on how to use it.
-The sort story is:
+Want to write your own plugin for WulfBot? It now has a plugin-ish API, take a
+look at files in the `plugin/` directory for examples on how to use it. The sort
+story is:
 
 ```ruby
 module MyCoolModule
   # Register a command handler
   WulfBot::register_command(command: "docoolthing") do |message|
     # Do stuff here. This will be run if the user types "/docoolthing".
-    # message is message object, consule the telegram-bot-ruby project for info
+
+    # `message` is a Telegram API message object, consult the telegram-bot-ruby
+    # project for more information.
+
+    WulfBot::send_limited(message.chat.id, "Yo, this is one cool plugin!")
   end
 end
 ```
