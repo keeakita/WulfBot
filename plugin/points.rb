@@ -3,7 +3,7 @@ require 'active_record'
 module WulfBot::Plugin::Points
 
   # Connect to the database
-  db_name =  ENV['RAILS_ENV'] || 'development'
+  db_name =  ENV['DATABASE'] || 'development'
   ActiveRecord::Base.establish_connection(
     YAML::load(
       File.open('db/config.yml')
