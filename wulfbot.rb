@@ -50,6 +50,7 @@ module WulfBot
         end
       end
     end
+
   rescue Telegram::Bot::Exceptions::ResponseError => e
     # If telegram gave a 502, it's safe to restart
     if (e.error_code.to_s == "502")
@@ -60,6 +61,12 @@ module WulfBot
       puts e
       exit 255
     end
+
+  # Telegram servers occasionally crap out and SSL connections fail. Retry.
+  rescue OpenSSL::SSL::SSLError => e
+    puts "Error connecting to the API over SSL. Retrying in 10 seconds"
+    sleep 10
+    retry
   end
 end
 
