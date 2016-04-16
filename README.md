@@ -71,8 +71,8 @@ with the settings of the server.
 ## Plugins
 
 Want to write your own plugin for WulfBot? It now has a plugin-ish API, take a
-look at files in the `plugin/` directory for examples on how to use it. The sort
-story is:
+look at files in the `plugin/` directory for examples on how to use it. The
+short story is:
 
 ```ruby
 module MyCoolModule
