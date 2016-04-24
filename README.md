@@ -51,6 +51,7 @@ WulfBot accepts the following commands:
 - `/uptime`: Tells how long the bot has been running.
 - `/ddate`: Gets the current date in the Discordian calendar system. Requires
   the `ddate` command to be installed.
+- `/weewoo`: 🚨🐺🚔🚔🚨🐺🚨🐺🚔🐺🚔🐺🚔🚔🐺🐺🐺🐺🚨🐺🚨🚔🚔🚨🚔🐺🐺🐺🚔🚨
 
 ### Points
 A point tracker (think upvotes/downvotes):
