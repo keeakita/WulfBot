@@ -52,6 +52,7 @@ WulfBot accepts the following commands:
 - `/ddate`: Gets the current date in the Discordian calendar system. Requires
   the `ddate` command to be installed.
 - `/weewoo`: 🚨🐺🚔🚔🚨🐺🚨🐺🚔🐺🚔🐺🚔🚔🐺🐺🐺🐺🚨🐺🚨🚔🚔🚨🚔🐺🐺🐺🚔🚨
+- `/bedtime`: Calculates times to wake up to avoid interrupting a sleep cycle
 
 ### Points
 A point tracker (think upvotes/downvotes):
