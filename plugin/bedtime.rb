@@ -17,6 +17,6 @@ module WulfBot::Plugin::BedTime
     end
 
     WulfBot::send_limited(message.chat.id,
-                          "You should wake up at: #{times}(EST)")
+                          "You should wake up at: #{times}(#{now.zone})")
   end
 end
