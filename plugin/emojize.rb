@@ -84,7 +84,7 @@ module WulfBot::Plugin::Emojize
 
   # Register a command handler
   WulfBot::register_command(command: "emojize") do |message|
-    /\A\/emojize(@WulfBot)?\s+(.+)/ =~ message.text
+    /\A\/emojize(@WulfBot)?\s+(.+)/i =~ message.text
     if $2.nil?
       WulfBot::send_limited(message.chat.id, "Give me a string to emojize")
     else
