@@ -1,5 +1,7 @@
 # Stores the secrets for the bot
 
+require 'yaml'
+
 module WulfBot
 end
 
